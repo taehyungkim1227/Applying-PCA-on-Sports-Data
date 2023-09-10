@@ -1,0 +1,64 @@
+---
+title: "PCA"
+output: pdf_document
+date: "2023-01-14"
+---
+
+
+
+## R Markdown
+
+References:
+
+https://www.statology.org/principal-components-analysis-in-r/
+
+https://www.datacamp.com/tutorial/pca-analysis-r
+
+https://www.udemy.com/course/python-for-data-science-and-machine-learning-bootcamp/learn/lecture/5733554#content
+
+https://www.r-bloggers.com/2021/05/principal-component-analysis-pca-in-r/
+
+https://michael-fuchs-python.netlify.app/2020/07/31/pca-for-speed-up-ml-models/
+
+```{r load package(s)}
+library(tidyverse)
+```
+
+```{r load data}
+df <- read.csv('data.csv')
+```
+
+```{r remove empty rows from data}
+df <- df %>% drop_na()
+
+df
+```
+
+```{r apply pca on the data}
+pc <- prcomp(df[,-1],center = TRUE, scale. = TRUE)
+
+pc
+```
+
+
+```{r display summary of pca results}
+summary(pc)
+```
+
+```{r use pca to predict with linear regression (variable selection)}
+trg <- predict(pc, df)
+
+trg <- data.frame(trg, df[1])
+```
+
+```{r}
+colnames(trg)
+```
+```{r linear regression model with selected features}
+model <- lm(FTHG~PC1+PC2+PC3+PC4+PC5+PC6, data = trg)
+```
+
+```{r summary of the model}
+summary(model)
+```
+
